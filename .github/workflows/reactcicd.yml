@@ -20,11 +20,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build project
         run: npm run build
 
- deploy:
+  deploy: # This line was moved back two spaces
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -38,9 +38,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build project
-        run: npm run build
 
       - name: Deploy to GitHub Pages
         run: |
