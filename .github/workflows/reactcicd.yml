@@ -24,7 +24,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-  deploy:
+ deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -39,11 +39,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build project
+        run: npm run build
+
       - name: Deploy to GitHub Pages
-        env:
-          GIT_USER: Vadde-Manikanta
-          GIT_EMAIL: your-email@example.com # Change this to your GitHub email
         run: |
-          git config --global user.name $GIT_USER
-          git config --global user.email $GIT_EMAIL
-          npm run deploy
+          git remote set-url origin https://git:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}
+          npx gh-pages -d dist
