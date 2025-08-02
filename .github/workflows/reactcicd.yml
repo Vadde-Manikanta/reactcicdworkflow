@@ -24,22 +24,27 @@ jobs:
       - name: Build project
         run: npm run build
 
-  deploy: # This line was moved back two spaces
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+
+  deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
+          name: dist-files
+          path: dist
 
       - name: Deploy to GitHub Pages
-        run: |
-          git remote set-url origin https://git:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}
-          npx gh-pages -d dist
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
